@@ -1,0 +1,477 @@
+swagger: "2.0"
+info:
+  title: bee-myblog API
+  description: myblog Api document
+  version: 1.0.0
+  termsOfService: https://blog.jiangshiyi.top
+  contact:
+    email: gng@bingyan.net
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+basePath: /auth
+paths:
+  /access_token/:
+    post:
+      tags:
+      - access_token
+      description: get access_token and refresh_token
+      operationId: AccessTokenController.get access_token and refresh_token
+      parameters:
+      - in: body
+        name: username
+        description: 账号
+        required: true
+        type: string
+      - in: body
+        name: password
+        description: 密码
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Token'
+        "403":
+          description: body is empty
+  /archives/:
+    get:
+      tags:
+      - archives
+      description: get all archives
+      operationId: ArchivesController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.Archive'
+        "400":
+          description: params error
+    post:
+      tags:
+      - archives
+      description: create one archive
+      operationId: ArchivesController.CreateArchive
+      parameters:
+      - in: body
+        name: name
+        description: 文章归档
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Archive'
+        "403":
+          description: body is empty
+  /archives/{id}/:
+    get:
+      tags:
+      - archives/:id
+      description: get one archive by ObjectId
+      operationId: ArchiveController.Get one archive
+      parameters:
+      - in: path
+        name: id
+        description: archive id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Archive'
+        "403":
+          description: :uid is empty
+  /blogs/:
+    get:
+      tags:
+      - blogs
+      description: get all blog
+      operationId: BlogsController.GetAll
+      parameters:
+      - in: query
+        name: tag
+        description: 获取指定标签的博文
+        type: string
+      - in: query
+        name: sort
+        description: 根据指定值排序，比如时间，阅读数，评论数
+        type: string
+      - in: query
+        name: offset
+        description: 分页值，如果有offset就一定要用limit
+        type: integer
+        format: int64
+      - in: query
+        name: limit
+        description: 分页
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.Blog'
+        "400":
+          description: params error
+    post:
+      tags:
+      - blogs
+      description: create one blog
+      operationId: BlogsController.CreateBlog
+      parameters:
+      - in: body
+        name: title
+        description: 文章标题
+        required: true
+        type: string
+      - in: body
+        name: summary
+        description: 文章概要
+        required: true
+        type: string
+      - in: body
+        name: tags
+        description: 文章标签
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - in: body
+        name: archive
+        description: 文章归档
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Blog'
+        "403":
+          description: body is empty
+  /blogs/{id}/:
+    get:
+      tags:
+      - blogs/:id
+      description: get one blog by ObjectId
+      operationId: BlogController.Get
+      parameters:
+      - in: path
+        name: id
+        description: blog id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Blog'
+        "403":
+          description: :uid is empty
+    put:
+      tags:
+      - blogs/:id
+      description: update the blog
+      operationId: BlogController.Update
+      parameters:
+      - in: path
+        name: id
+        description: The id you want to update
+        required: true
+        type: string
+      - in: body
+        name: title
+        description: 标题（改了就有值，没改就为空)
+        required: true
+        type: string
+      - in: body
+        name: summary
+        description: 总结（同上）
+        required: true
+        type: string
+      - in: body
+        name: tags
+        description: 标签(同上)
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - in: body
+        name: archive
+        description: 归档信息(同上)
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "403":
+          description: id not right
+    delete:
+      tags:
+      - blogs/:id
+      description: delete the blog
+      operationId: BlogController.Delete
+      parameters:
+      - in: path
+        name: id
+        description: The id you want to delete
+        required: true
+        type: string
+      responses:
+        "204":
+          description: ""
+          schema:
+            $ref: '#/definitions/{}'
+        "403":
+          description: id is empty
+  /collections/:
+    get:
+      tags:
+      - collections
+      description: get all collections
+      operationId: CollectionsController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.Collection'
+        "400":
+          description: params error
+    post:
+      tags:
+      - collections
+      description: create one collection
+      operationId: CollectionsController.CreateCollection
+      parameters:
+      - in: body
+        name: title
+        description: 收藏内容的标题
+        required: true
+        type: string
+      - in: body
+        name: author
+        description: 收藏的作者
+        required: true
+        type: string
+      - in: body
+        name: url
+        description: 收藏的url
+        required: true
+        type: string
+      - in: body
+        name: time
+        description: 收藏的时间
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Collection'
+        "403":
+          description: body is empty
+  /collections/{id}/:
+    get:
+      tags:
+      - collections/:id
+      description: get one collection by ObjectId
+      operationId: CollectionController.Get one collection
+      parameters:
+      - in: path
+        name: id
+        description: collection id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Collection'
+        "403":
+          description: :uid is empty
+  /comments/:
+    get:
+      tags:
+      - comments
+      description: get all comments
+      operationId: CommentsController.GetAll
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.Comment'
+        "400":
+          description: params error
+    post:
+      tags:
+      - comments
+      description: create one comment
+      operationId: CommentsController.CreateComment
+      parameters:
+      - in: body
+        name: blogId
+        description: 文章ID
+        required: true
+        type: string
+      - in: body
+        name: username
+        description: 评论者
+        required: true
+        type: string
+      - in: body
+        name: content
+        description: 评论的内容
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "403":
+          description: body is empty
+  /comments/{id}/:
+    get:
+      tags:
+      - comments/:id
+      description: get one comment by ObjectId
+      operationId: CommentController.Get one comment
+      parameters:
+      - in: path
+        name: id
+        description: collection id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Collection'
+        "403":
+          description: :uid is empty
+  /refresh_token/:
+    post:
+      tags:
+      - refresh_token
+      description: get access_token and refresh_token
+      operationId: RefreshTokenController.get access_token and refresh_token
+      parameters:
+      - in: body
+        name: refreshToken
+        description: refreshToken
+        required: true
+        type: string
+      responses:
+        "201":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Token'
+        "403":
+          description: body is empty
+definitions:
+  '{}':
+    title: '{}'
+    type: object
+  bson.ObjectId:
+    title: ObjectId
+    type: object
+  models.Archive:
+    title: Archive
+    type: object
+    properties:
+      Blogs:
+        type: array
+        items:
+          $ref: '#/definitions/bson.ObjectId'
+      Id:
+        $ref: '#/definitions/bson.ObjectId'
+      Name:
+        type: string
+  models.Blog:
+    title: Blog
+    type: object
+    properties:
+      CommentCount:
+        type: integer
+        format: int64
+      Comments:
+        type: array
+        items:
+          $ref: '#/definitions/bson.ObjectId'
+      CreatedAt:
+        type: string
+        format: datetime
+      Id:
+        $ref: '#/definitions/bson.ObjectId'
+      ReadCount:
+        type: integer
+        format: int64
+      Summary:
+        type: string
+      Tags:
+        type: array
+        items:
+          type: string
+      Title:
+        type: string
+      UpdatedAt:
+        type: string
+        format: datetime
+  models.Collection:
+    title: Collection
+    type: object
+    properties:
+      Author:
+        type: string
+      Id:
+        $ref: '#/definitions/bson.ObjectId'
+      Time:
+        type: string
+        format: datetime
+      Title:
+        type: string
+      Url:
+        type: string
+  models.Comment:
+    title: Comment
+    type: object
+    properties:
+      Content:
+        type: string
+      CreatedAt:
+        type: string
+        format: datetime
+      Id:
+        $ref: '#/definitions/bson.ObjectId'
+      Username:
+        type: string
+  models.Token:
+    title: Token
+    type: object
+    properties:
+      AccessToken:
+        type: string
+      RefreshToken:
+        type: string
+  models.User:
+    title: User
+    type: object
+tags:
+- name: blogs/:id
+  description: |
+    处理one blog

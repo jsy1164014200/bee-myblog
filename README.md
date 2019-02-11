@@ -9,6 +9,29 @@
 5. git pull origin dev(master) master
 6. bee run 
 
+7. go get -u dep
+8. dep init
+```python
+# 依赖管理帮助
+dep help ensure
+# 添加一条依赖
+dep ensure -add github.com/bitly/go-simplejson
+# 这里 @= 参数指定的是 某个 tag
+dep ensure -add github.com/bitly/go-simplejson@=0.4.3
+# 添加后一定记住执行 确保 同步
+dep ensure
+# 同理建议使用
+dep ensure -v
+# 更新依赖
+dep ensure -update -v
+#  删除没有用到的 package
+dep prune -v
+```
+
+go-simplejson
+go-jwt
+
+
 引用需要两个集合，内嵌只用一个集合
 # mongo 数据库设计
 博文对评论： 一对多
@@ -24,8 +47,7 @@
     - 评论数 commentCount    int 
     - 评论   comments        数组 引用comments
     - 阅读数 readCount       int 
-    - 标签 tags              内嵌tags
-        - _ id 
+    - 标签 tags              内嵌tags 
         - 名字 name
 
 2. comments 评论
@@ -48,7 +70,7 @@
 # redis 设计
 - [ ] 缓存readCount
 - [ ] 标签存在 缓存中
-- [ ] 缓存 jwt 字段 的refresh token
+- [x] 缓存 jwt 字段 的refresh token
 
 
 问：有人说本地缓存密码和用户名，自动登录不就行了么？
@@ -64,26 +86,26 @@
 > 3. if  401  那么就要 refresh_token
 > 4. 那么就带上 refresh_token json请求到 服务器 /v1/auth/refresh_token
 > 5. 如果回应是 access_token  那么刷新localstorage继续访问
-> 6. 如果是 空，那么 跳到登录界面
+> 6. 如果是 401，那么 跳到登录界面
 
 **这样既实现了自动登录，又保证了安全**
 
 # TODO：
-- [ ] Dockerfile
-- [ ] docker-compose.yml
-- [ ] .gitignore
+- [x] Dockerfile
+- [x] docker-compose.yml
+- [x] .gitignore
 
 ====
-- [ ] swagger api 文档生成
-- [ ] logs 日志记录
-- [ ] tests  单元 集成测试
+- [x] swagger api 文档生成
+- [x] logs 日志记录
+- [x] tests  单元 集成测试
 
 ====
 - [ ] script ci cd 
 - [ ] .travis.yml
 
 ====
-- [ ] LICENSE
+- [x] LICENSE
 
 # API设计
 ### 1. blogs  /v1/blogs?xxx
@@ -99,7 +121,7 @@
     - title
     - summary
     - tags
-    - archives
+    - archive
     
 ### 2. blog   /v1/blog/_ id
 1. get（时间变成年月日，评论内嵌进去，找出blog的归档信息）
@@ -110,7 +132,7 @@
     - title
     - summary
     - tags
-    - archives
+    - archive
 
 4. delete（删除）
 

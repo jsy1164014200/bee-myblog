@@ -1,0 +1,39 @@
+version: "3"
+services:
+  web:
+    build: .
+    volumes:
+      - .:/go/src/app
+    environment:
+      PRORUNMODE: prod
+      MONGO_DB_HOST: mongodb
+      MONGO_DB_USER: root
+      MONGO_DB_PASSWORD: root
+      REDIS_DB_HOST: redisdb
+    depends_on:
+      - mongodb
+      - redisdb
+    networks:
+      - bee-blog-bridge
+    ports:
+      - "8080:8080"
+    entrypoint: cd /go/src/app && ./bee-myblog
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./data:/data/db
+    networks:
+      - bee-blog-bridge
+  redisdb:
+    image: redis
+    networks:
+      - bee-blog-bridge
+
+networks:
+  bee-blog-bridge:
+    driver: bridge
+
+
